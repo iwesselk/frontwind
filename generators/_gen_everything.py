@@ -7,14 +7,17 @@ class {NAME}(Enum):
 {DOCS}{BLAHBLAH}
 """
 
-
+generated_prefix = "./src/enums/"
 def magic_text(text):
-    return str(text).upper().replace("-", "_").replace(".", "_")
+    return str(text).upper().replace("-", "_").replace(".", "_").replace(" ", "").replace("/", "_")
 
 
 def gen_from_list(name, lst, docs = None):
     totalstring = []
     for i in lst:
+        #Fixes an issue with effects. Its not a pretty one I don't think
+        if str(i).find("*") != -1:
+            continue
         totalstring.append("    {} = \"{}\"".format(magic_text(i), i))
     doc_write=""
     if docs:
@@ -71,6 +74,46 @@ def generate_file(path, lst):
             f.write("\n")
 
 
+Layout = ["https://tailwindcss.com/docs/container",
+        "https://tailwindcss.com/docs/box-decoration-break",
+        "https://tailwindcss.com/docs/box-sizing",
+        "https://tailwindcss.com/docs/display",
+        "https://tailwindcss.com/docs/float",
+        "https://tailwindcss.com/docs/clear",
+        "https://tailwindcss.com/docs/isolation",
+        "https://tailwindcss.com/docs/object-fit",
+        "https://tailwindcss.com/docs/object-position",
+        "https://tailwindcss.com/docs/overflow",
+        "https://tailwindcss.com/docs/overscroll-behavior",
+        "https://tailwindcss.com/docs/position",
+        "https://tailwindcss.com/docs/top-right-bottom-left",
+        "https://tailwindcss.com/docs/visibility",
+        "https://tailwindcss.com/docs/z-index"]
+
+ContainerLayouts = ["https://tailwindcss.com/docs/flex-direction",
+        "https://tailwindcss.com/docs/flex-wrap",
+        "https://tailwindcss.com/docs/flex",
+        "https://tailwindcss.com/docs/flex-grow",
+        "https://tailwindcss.com/docs/flex-shrink",
+        "https://tailwindcss.com/docs/order",
+        "https://tailwindcss.com/docs/grid-template-columns",
+        "https://tailwindcss.com/docs/grid-column",
+        "https://tailwindcss.com/docs/grid-template-rows",
+        "https://tailwindcss.com/docs/grid-row",
+        "https://tailwindcss.com/docs/grid-auto-flow",
+        "https://tailwindcss.com/docs/grid-auto-columns",
+        "https://tailwindcss.com/docs/grid-auto-rows",
+        "https://tailwindcss.com/docs/gap",
+        "https://tailwindcss.com/docs/justify-content",
+        "https://tailwindcss.com/docs/justify-items",
+        "https://tailwindcss.com/docs/justify-self",
+        "https://tailwindcss.com/docs/align-content",
+        "https://tailwindcss.com/docs/align-items",
+        "https://tailwindcss.com/docs/align-self",
+        "https://tailwindcss.com/docs/place-content",
+        "https://tailwindcss.com/docs/place-items",
+        "https://tailwindcss.com/docs/place-self"]
+
 Spacing = ["https://tailwindcss.com/docs/padding",
         "https://tailwindcss.com/docs/margin",
         "https://tailwindcss.com/docs/space"]
@@ -123,10 +166,81 @@ Borders = ["https://tailwindcss.com/docs/border-radius",
         "https://tailwindcss.com/docs/ring-offset-width",
         "https://tailwindcss.com/docs/ring-offset-color"]
 
-generate_file("./src/spacing.py", Spacing)
-generate_file("./src/typography.py", Typography)
-generate_file("./src/backgrounds.py", Backgrounds)
-generate_file("./src/borders.py", Borders)
+
+Effects = ["https://tailwindcss.com/docs/box-shadow",
+        "https://tailwindcss.com/docs/opacity",
+        "https://tailwindcss.com/docs/mix-blend-mode",
+        "https://tailwindcss.com/docs/background-blend-mode"]
+
+Filters = ["https://tailwindcss.com/docs/filter",
+        "https://tailwindcss.com/docs/blur",
+        "https://tailwindcss.com/docs/brightness",
+        "https://tailwindcss.com/docs/contrast",
+        "https://tailwindcss.com/docs/drop-shadow",
+        "https://tailwindcss.com/docs/grayscale",
+        "https://tailwindcss.com/docs/hue-rotate",
+        "https://tailwindcss.com/docs/invert",
+        "https://tailwindcss.com/docs/saturate",
+        "https://tailwindcss.com/docs/sepia",
+        # Do I want to move these to their own file despite their website organization?
+        "https://tailwindcss.com/docs/backdrop-filter",
+        "https://tailwindcss.com/docs/backdrop-blur",
+        "https://tailwindcss.com/docs/backdrop-brightness",
+        "https://tailwindcss.com/docs/backdrop-contrast",
+        "https://tailwindcss.com/docs/backdrop-grayscale",
+        "https://tailwindcss.com/docs/backdrop-hue-rotate",
+        "https://tailwindcss.com/docs/backdrop-invert",
+        "https://tailwindcss.com/docs/backdrop-opacity",
+        "https://tailwindcss.com/docs/backdrop-saturate",
+        "https://tailwindcss.com/docs/backdrop-sepia"]
+
+Tables = ["https://tailwindcss.com/docs/border-collapse",
+        "https://tailwindcss.com/docs/table-layout"]
+
+Transitions = ["https://tailwindcss.com/docs/transition-property",
+            "https://tailwindcss.com/docs/transition-duration",
+            "https://tailwindcss.com/docs/transition-timing-function",
+            "https://tailwindcss.com/docs/transition-delay",
+            "https://tailwindcss.com/docs/animation",
+            ]
+
+Transforms = ["https://tailwindcss.com/docs/transform",
+            "https://tailwindcss.com/docs/transform-origin",
+            "https://tailwindcss.com/docs/scale",
+            "https://tailwindcss.com/docs/rotate",
+            "https://tailwindcss.com/docs/translate",
+            "https://tailwindcss.com/docs/skew"]
+
+Interactivity = ["https://tailwindcss.com/docs/appearance",
+                "https://tailwindcss.com/docs/cursor",
+                "https://tailwindcss.com/docs/outline",
+                "https://tailwindcss.com/docs/pointer-events",
+                "https://tailwindcss.com/docs/resize",
+                "https://tailwindcss.com/docs/user-select"]
+
+Svg = ["https://tailwindcss.com/docs/fill",
+        "https://tailwindcss.com/docs/stroke",
+        "https://tailwindcss.com/docs/stroke-width"]
+
+Accessibilty = ["https://tailwindcss.com/docs/screen-readers"]
+
+
+def p(st):
+    return os.path.join(generated_prefix, st)
+generate_file(p("layout.py"), Layout)
+generate_file(p("container_layouts.py"), ContainerLayouts)
+generate_file(p("spacing.py"), Spacing)
+generate_file(p("typography.py"), Typography)
+generate_file(p("backgrounds.py"), Backgrounds)
+generate_file(p("borders.py"), Borders)
+generate_file(p("effects.py"), Effects)
+generate_file(p("filters.py"), Filters)
+generate_file(p("tables.py"), Tables)
+generate_file(p("transitions.py"), Transitions)
+generate_file(p("transforms.py"), Transforms)
+generate_file(p("interactivity.py"), Interactivity)
+generate_file(p("svg.py"), Svg)
+generate_file(p("accessibility.py"), Accessibilty)
 
 # for key, value in Typography.items():
 #     print(_genstupid.gen_from_list(key, full_pipe(value)))
