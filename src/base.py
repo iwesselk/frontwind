@@ -48,19 +48,6 @@ class Stylesheet(BaseFrontwind):
     def __repr__(self):
         return "<link rel=\"stylesheet\" href=\"{href}\">".format(href=self.href)
 
-
-@dataclass(repr=False)
-class Tag(BaseFrontwind):
-    pass
-
-
-@dataclass(repr=False)
-class Width(Tag):
-    width_type: str = "0"
-    def __repr__(self):
-        return "w-{width_type}".format(width_type=self.width_type)
-
-
 """
 Future method of doing this:
 BodyElement(element_type="p", inner_content="blah blah blah", width: Width.w_min)
@@ -75,22 +62,15 @@ class BodyElement(BaseFrontwind):
     tag: str = ""
     content: str = ""
     is_full_tag: bool = True
-    # TODO: Don't be dumb with naming
-    extra_fanciez: list[Tag] = field(default_factory=list)
     classes: list[str] = field(default_factory=list)
-    def preprocess_classes(self):
-        self.classes
-        for tag in self.extra_fanciez:
-            self.classes.append(tag.render())
     def __repr__(self):
         # Side effect function
         self.preprocess_classes()
         return "<{tag}{class_info} {id}>{content}{tail_add}".format(
                 tag=self.tag, 
                 content=self.content, 
-                class_info = " class=\"{}\"".format(" ".join([tag.render() for tag in self.extra_fanciez])) if len(self.extra_fanciez) > 0 else "",
-                tail_add = "</{tag}>".format(tag=self.tag) if self.is_full_tag else "",
-                id = "id=\""+str(self.id)+"\"")
+                class_info = " class=\"{}\"".format(" ".join(self.classes)) if len(self.classes) > 0 else "",
+                tail_add = "</{tag}>".format(tag=self.tag) if self.is_full_tag else "")
 
 
 @dataclass(repr=False)
